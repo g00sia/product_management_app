@@ -1,0 +1,16 @@
+
+{% for result in results %}
+<tr>
+    <td>
+        {{ result.content }}
+    </td>
+    <td>
+        {{ result.date_created.date() }}
+    </td>
+    <td>
+        <a href="/delete/{{result.id}}">delete</a>
+        <br>
+        <a href="/update/{{result.id}}">update</a>
+    </td>
+</tr>
+{% endfor %}

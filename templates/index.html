@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<h1>products</h1>
+{% endblock %}
+
+{% block body %}
+<div class ="content">
+    
+    {% if tasks|length < 1 %}
+    <h4>There are no tasks.create one below</h4>
+    {% else %}
+
+
+<table class = tabelka>
+    <thead>
+    <tr>
+        <th>Task</th>
+        <th>Added</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    {% for task in tasks %}
+    <tbody>
+    <tr>
+        <td>{{ task.content }}</td>
+        <td>{{ task.date_created.date() }}</td>
+        <td>
+            <a href="/delete/{{task.id}}">delete</a>
+            <br>
+            <a href="/update/{{task.id}}">update</a>
+        </td>
+    </tr>
+    </tbody>
+    {% endfor %}
+    
+    
+    
+</table>
+
+{% endif %}
+<form action="/" method = "POST">
+    <input type = "text" name = "content" id = "content">
+    <input type = "submit" value="ADD TASK">
+</div>
+
+<div class="search">
+    <input type = "text" class = "input" placeholder="Search" name = "q" hx-get="/search" hx-trigger="keyup changed delay:500ms" hx-target="#results" autocomplete="off">
+    <table>
+        <thead>
+        <tr>
+            <th>Task</th>
+            <th>Added</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id = "results"></tbody>
+    
+    <tbody id = "results"></tbody>
+
+</form>
+</div>
+
+{% endblock %} 
