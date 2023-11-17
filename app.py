@@ -7,11 +7,13 @@ import os
 from flask import jsonify
 from flask_cors import CORS
 import json
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+CORS(app)
 
 
 class Todo(db.Model):
@@ -22,19 +24,9 @@ class Todo(db.Model):
 
     def __repr__(self):
         return '<Task %r>' % self.id
-data =[
-    {"id": 1, "name": "Produkt A", "price": 20.0},
-    {"id": 2, "name": "Produkt B", "price": 30.0},
-    {"id": 3, "name": "Produkt C", "price": 25.0}
-]
-
-@app.route('/api', methods=['GET'])
-def proba():
-    json_data = json.dumps(data, indent = 4)
-    return json_data
 
 
-@app.route('/dupa', methods = ['POST', 'GET'])
+@app.route('/getdata', methods = ['POST', 'GET'])
 def index():
     if request.method == "POST":
         try:
@@ -71,10 +63,9 @@ def search():
         return jsonify({"results": []})
 
     
-@app.route('/delete/<int:id>')
+@app.route('/delete/<int:id>', methods=['DELETE'])
 def delete(id):
     task_to_delete = Todo.query.get_or_404(id)
-
     try:
         task_to_delete.is_deleted = True
         db.session.commit()
@@ -85,8 +76,8 @@ def delete(id):
 
     
 
-@app.route('/update/<int:id>', methods = ['GET', 'POST'])
-def update(id):
+@app.route('/edit/<int:id>', methods = ['GET', 'POST'])
+def edit(id):
     task = Todo.query.get_or_404(id)
 
     if request.method=='POST':

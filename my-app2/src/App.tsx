@@ -3,15 +3,28 @@ import './App.css';
 import InputField from './components/InputField';
 import { Todo } from './model';
 import Todolist from './components/Todolist';
-import addTodo from './api';
+import {addTodo} from './api';
 
 const App: React.FC = () => {
   const [todo, setTodo] = useState<string>("");
   const [todos, setTodos] = useState<Todo[]>([]);
 
 
+
+  const handleAdd = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (todo) {
+    const newTodo = await addTodo(todo);
+    if (newTodo) {
+      setTodos((prevTodos) => [...prevTodos, newTodo]);
+      setTodo("");
+      window.location.reload();
+    }
+  }
+};
+
   useEffect(() => {
-    fetch('/dupa')
+    fetch('/getdata')
       .then((res) => res.json())
       .then((data) => {
         const todosData = data.map((item: any) => ({
@@ -24,23 +37,6 @@ const App: React.FC = () => {
   }, []);
    
 
-   
-
-  const handleAdd = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (todo) {
-    const newTodo = await addTodo(todo);
-
-    if (newTodo) {
-      setTodos([...todos, newTodo]);
-      setTodo("");
-      window.location.reload();
-    }
-  }
-};
-
-
-  // tutaj chce wyslac to do backendu
 
 
   return (

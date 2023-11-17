@@ -77,11 +77,21 @@
     padding: 5px;
     border: none;
     font-size: 20px;
+
+  }
+  .todos_single--input {
+    flex: 1;
+    padding: 5px;
+    border: none;
+    font-size: 20px;
+    background-color: #FECDA6;
+
   }
   
   .todos_single--text:focus {
     outline: none;
   }
+ 
   
   .icon {
     margin-left: 10px;
