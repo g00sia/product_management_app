@@ -34,16 +34,19 @@ def proba():
     return json_data
 
 
-@app.route('/', methods = ['POST', 'GET'])
+@app.route('/dupa', methods = ['POST', 'GET'])
 def index():
     if request.method == "POST":
-        task_content = request.form['content']
-        new_task = Todo(content=task_content)
-
         try:
+            data = request.get_json()  # Pobierz dane w formacie JSON
+            task_content = data.get('content')
+            new_task = Todo(content=task_content)
+
             db.session.add(new_task)
             db.session.commit()
-            return jsonify({"message": "Task added successfully"})
+            return jsonify({ "id": new_task.id,
+                "content": new_task.content,
+                "date_created": new_task.date_created.isoformat()})
         except:
             return jsonify({"error": "There was an issue"})
         
@@ -51,7 +54,7 @@ def index():
         tasks = Todo.query.filter_by(is_deleted = False).order_by(Todo.date_created).all()
         tasks_json = [{"id": task.id, "content": task.content, "date_created": task.date_created.isoformat()} for task in tasks]
         json_data = json.dumps(tasks_json, indent = 4)
-        return json_data
+        return jsonify(tasks_json)
         
     
 
