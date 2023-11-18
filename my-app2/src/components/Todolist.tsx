@@ -6,9 +6,10 @@ import SingleTodo from './SingleTodo';
 interface Props{
     todos:Todo[];
     setTodos:React.Dispatch<React.SetStateAction<Todo[]>>;
+    setButtonPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Todolist: React.FC<Props> = ({todos, setTodos}: Props) => {
+const Todolist: React.FC<Props> = ({todos, setTodos,setButtonPopup}: Props) => {
   return (
     <div className="todos">
         {todos.map(todo=>(
@@ -16,7 +17,8 @@ const Todolist: React.FC<Props> = ({todos, setTodos}: Props) => {
             todo = {todo} 
             key={todo.id}
             todos = {todos}
-            setTodos = {setTodos}/>
+            setTodos = {setTodos}
+            setButtonPopup={setButtonPopup}/>
         ))}
     </div>
   )

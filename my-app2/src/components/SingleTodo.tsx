@@ -1,15 +1,16 @@
 import React , {useRef, useState, useEffect} from 'react'
 import { Todo } from '../model';
 import "./styles.css";
-import { deleteTodo, editTodo } from '../api';
-
+import { deleteTodo} from '../api';
 
 type Props ={
     todo:Todo;
     todos:Todo[];
     setTodos:React.Dispatch<React.SetStateAction<Todo[]>>;
+    setButtonPopup: React.Dispatch<React.SetStateAction<boolean>>;
+
 };
-const SingleTodo = ({todo, todos, setTodos}: Props) => {
+const SingleTodo = ({todo, todos, setTodos, setButtonPopup}: Props) => {
   const [edit, setEdit] = useState<boolean>(false)
   const [editTodo, setEditTodo] = useState<string>(todo.todo)
 
@@ -32,13 +33,14 @@ const handleEdit = (e:React.FormEvent, id: number)=>{
 };
 
 
+
 const inputRef = useRef<HTMLInputElement>(null)
 
 useEffect(()=>{
   inputRef.current?.focus();
 }, [edit])
 
-  
+
 
   return (
     <form className='todos_single' onSubmit = {(e)=>handleEdit(e, todo.id)}>
@@ -52,7 +54,7 @@ useEffect(()=>{
       <div>
         <span className="icon" onClick={()=>{if (!edit){setEdit(!edit)}}}>e</span>
         <span className="icon" onClick={handleDelete}>u</span>
-
+        <span className="icon" onClick={()=>setButtonPopup(true)}>c</span>
       </div>
       </form>
   )

@@ -1,5 +1,25 @@
 import { Todo } from './model';
 
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('/getdata');
+      if (response.ok) {
+        const data = await response.json();
+        return data.map((item: any) => ({
+          id: item.id,
+          todo: item.content,
+        }));
+      } else {
+        console.error('Error fetching data:', response.statusText);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      return [];
+    }
+  };
+
   const addTodo = async (todo: string): Promise<Todo | null> => {
     try {
       const response = await fetch('/getdata', {
@@ -63,7 +83,7 @@ import { Todo } from './model';
     }
   };
   
-  export { addTodo, deleteTodo, editTodo };
+  export { addTodo, deleteTodo, editTodo, fetchData};
 
 
   
