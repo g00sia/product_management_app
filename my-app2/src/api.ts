@@ -1,14 +1,16 @@
 import { Todo } from './model';
 
 
-  const fetchData = async () => {
+  const fetchData = async (page: number = 1, pageSize: number = 5) => {
     try {
-      const response = await fetch('/getdata');
+      const response = await fetch(`/getdata?page=${page}&pageSize=${pageSize}`);
       if (response.ok) {
         const data = await response.json();
         return data.map((item: any) => ({
           id: item.id,
           todo: item.content,
+          description: item.description,  
+          image_url: item.image_url 
         }));
       } else {
         console.error('Error fetching data:', response.statusText);
@@ -20,14 +22,30 @@ import { Todo } from './model';
     }
   };
 
-  const addTodo = async (todo: string): Promise<Todo | null> => {
+  const getTotalPages = async (pageSize: number): Promise<number> => {
+    try {
+      const response = await fetch(`/getTotalPages?pageSize=${pageSize}`);
+      if (response.ok) {
+        const data = await response.json();
+        return data.totalPages;
+      } else {
+        console.error('Error fetching total pages:', response.statusText);
+        return 0;
+      }
+    } catch (error) {
+      console.error('Error fetching total pages:', error);
+      return 0;
+    }
+  };
+
+  const addTodo = async (todo: string, description: string, imageUrl: string ): Promise<Todo | null> => {
     try {
       const response = await fetch('/getdata', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content: todo }),
+        body: JSON.stringify({ content: todo, description, image_url: imageUrl })
       });
   
       if (response.ok) {
@@ -61,14 +79,15 @@ import { Todo } from './model';
     }
   };
 
-  const editTodo = async (id: number, updatedTodo: string): Promise<boolean> => {
+  const updateTodo = async (id: number, updatedTodo: string, updatedDescription: string, updatedImageUrl: string): Promise<boolean> => {
     try {
-      const response = await fetch(`/edit/${id}`, {
+      const response = await fetch(`/update/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content: updatedTodo }),
+        body: JSON.stringify({ content: updatedTodo, description: updatedDescription,
+          image_url: updatedImageUrl}),
       });
   
       if (response.ok) {
@@ -83,7 +102,7 @@ import { Todo } from './model';
     }
   };
   
-  export { addTodo, deleteTodo, editTodo, fetchData};
+  export { addTodo, deleteTodo, updateTodo, fetchData, getTotalPages};
 
 
   
