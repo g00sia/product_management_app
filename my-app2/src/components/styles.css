@@ -65,7 +65,8 @@
     border-radius: 5px;
     padding: 20px;
     margin-top: 15px;
-    background-image: url("https://img.freepik.com/free-photo/crumpled-yellow-paper-background-close-up_60487-2390.jpg?size=626&ext=jpg");
+    background-color: #FF5B22;
+    /* background-image: url("https://img.freepik.com/free-photo/crumpled-yellow-paper-background-close-up_60487-2390.jpg?size=626&ext=jpg"); */
     transition: 0.2s;
   }
   .todos_single:hover {
@@ -85,7 +86,9 @@
     border: none;
     font-size: 20px;
     background-color: #FECDA6;
-
+    outline:none;
+    margin-left: 7px;
+    height: auto;
   }
   
   .todos_single--text:focus {

@@ -80,6 +80,7 @@ import { Todo } from './model';
   };
 
   const updateTodo = async (id: number, updatedTodo: string, updatedDescription: string, updatedImageUrl: string): Promise<boolean> => {
+    console.log("DUPA");
     try {
       const response = await fetch(`/update/${id}`, {
         method: 'POST',

@@ -27,9 +27,8 @@ const SingleTodo = ({todo, todos, setTodos, setButtonPopup}: Props) => {
 
 
 const handleEdit = async (e:React.FormEvent, id: number)=>{
-  e.preventDefault();
+   e.preventDefault();
   const success = await updateTodo(id, editTodo,  editDescription, editImageUrl);
-
   if (success) {
     setTodos(
       todos.map((todo) => (todo.id === id ? { ...todo, todo: editTodo, description: editDescription, image_url: editImageUrl } : todo))
@@ -43,6 +42,8 @@ const handleEdit = async (e:React.FormEvent, id: number)=>{
 
 
 const inputRef = useRef<HTMLInputElement>(null)
+const descriptionRef = useRef<HTMLInputElement>(null)
+const imageUrlRef = useRef<HTMLInputElement>(null)
 
 useEffect(()=>{
   inputRef.current?.focus();
@@ -54,16 +55,34 @@ return (
   <form className='todos_single' onSubmit={(e) => handleEdit(e, todo.id)}>
     {edit ? (
       <>
-        <input ref={inputRef} value={editTodo} onChange={(e) => setEditTodo(e.target.value)} className='todos_single--input' />
         <input ref={inputRef}
+          value={editTodo} 
+          onChange={(e) => setEditTodo(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleEdit(e, todo.id);
+            }
+          }}
+          className='todos_single--input' />
+        <input
           value={editDescription}
           onChange={(e) => setEditDescription(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleEdit(e, todo.id);
+            }
+          }}
           placeholder='Description'
           className='todos_single--input'
         />
-        <input ref={inputRef}
+        <input
           value={editImageUrl}
           onChange={(e) => setEditImageUrl(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleEdit(e, todo.id);
+            }
+          }}
           placeholder='Image URL'
           className='todos_single--input'
         />

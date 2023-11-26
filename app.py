@@ -54,7 +54,6 @@ def index():
             page_size = int(request.args.get('pageSize', 5))
             tasks = Todo.query.filter_by(is_deleted = False).order_by(Todo.date_created.desc()).paginate(page=page, per_page=page_size, error_out=False)
             tasks_json = [{"id": task.id, "content": task.content,"description": task.description, "image_url": task.image_url, "date_created": task.date_created.isoformat()} for task in tasks.items]
-            print(tasks_json)
             return jsonify(tasks_json)
         except Exception as e:
             return jsonify({"error": f"There was an issue: {str(e)}"})
@@ -97,12 +96,16 @@ def delete(id):
 
 @app.route('/update/<int:id>', methods = ['GET', 'POST'])
 def edit(id):
+    print("JESTEM TUTAJ!")
     task = Todo.query.get_or_404(id)
 
     if request.method == 'POST':
         if request.is_json:
             data = request.get_json()
             task.content = data.get('content', task.content)
+            task.description = data.get('description', task.description)
+            task.image_url = data.get('image_url', task.image_url)
+
         else:
             task.content = request.form.get('content', task.content)
 
