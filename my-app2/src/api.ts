@@ -102,8 +102,30 @@ import { Todo } from './model';
       return false;
     }
   };
+
+
+  const searchTodo = async (searchTerm: string, page: number = 1, pageSize: number = 5): Promise<Todo[]> => {
+    try {
+      const response = await fetch(`/search?q=${searchTerm}&page=${page}&pageSize=${pageSize}`);
+      if (response.ok) {
+        const data = await response.json();
+        return data.results.map((item: any) => ({
+          id: item.id,
+          todo: item.content,
+          description: item.description,  
+          image_url: item.image_url 
+        }));
+      } else {
+        console.error('Error searching todo:', response.statusText);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error searching todo:', error);
+      return [];
+    }
+  };
   
-  export { addTodo, deleteTodo, updateTodo, fetchData, getTotalPages};
+  export { addTodo, deleteTodo, updateTodo, fetchData, getTotalPages, searchTodo};
 
 
   

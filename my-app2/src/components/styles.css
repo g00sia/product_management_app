@@ -140,7 +140,21 @@ button:active {
   color: black;
   outline: 1px solid black;
 }
-  
+
+.searchbar{
+  border: none;
+  transition: 0.2s;
+  border-radius: 50px;
+  height:30px;
+  box-shadow: inset 0 0 4px black;
+}
+
+.searchbar:active{
+  transform: scale(0.8);
+  outline: none;
+}
+
+
 /* 
   .popup{
     position:fixed;

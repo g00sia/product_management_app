@@ -72,10 +72,13 @@ def get_total_pages():
 @app.route("/search")
 def search():
     q = request.args.get("q")
+    page = int(request.args.get('page', 1))
+    page_size = int(request.args.get('pageSize', 5))
     print(q)
     if q:
-        results = Todo.query.filter_by(is_deleted = False).filter(Todo.content.icontains(q)).order_by(Todo.date_created).all()
-        results_json = [{"id": task.id, "content": task.content, "date_created": task.date_created} for task in results]
+        results = Todo.query.filter_by(is_deleted = False).filter(Todo.content.ilike(f"%{q}%")).order_by(Todo.date_created).paginate(page=page, per_page=page_size, error_out=False)
+        results_json = [{"id": task.id, "content": task.content, "description": task.description,
+                "image_url":task.image_url, "date_created": task.date_created.isoformat()} for task in results]
         return jsonify({"results": results_json})
     else: 
         return jsonify({"results": []})

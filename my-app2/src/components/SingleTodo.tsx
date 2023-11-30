@@ -21,7 +21,6 @@ const SingleTodo = ({todo, todos, setTodos, setButtonPopup}: Props) => {
     if (success) {
       const updatedTodos = todos.filter((item) => item.id !== todo.id);
       setTodos(updatedTodos);
-      window.location.reload();
     }
   };
 

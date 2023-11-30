@@ -5,6 +5,8 @@ import { Todo } from './model';
 import Todolist from './components/Todolist';
 import {addTodo, fetchData, getTotalPages} from './api';
 import Popup from './components/popup';
+import SearchBar from './components/SearchBar'
+
 
 const App: React.FC = () => {
   const [todo, setTodo] = useState<string>("");
@@ -15,6 +17,9 @@ const App: React.FC = () => {
   const [pageSize, setPageSize] = useState(5);
   const [buttonPopup, setButtonPopup] = useState(false);
   const [totalPages, setTotalPages] = useState(3);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [searchResults, setSearchResults] = useState<Todo[]>([]);
+
  
   useEffect(() => {
     const fetchAndSetData = async (page: number, pageSize: number) => {
@@ -72,7 +77,8 @@ const renderPaginationButtons = () => {
         setImageUrl={setImageUrl}
         handleAdd={handleAdd} />
       <div className="pagination">{renderPaginationButtons()}</div>
-      <Todolist todos={todos} setTodos={setTodos} setButtonPopup={setButtonPopup}/>
+      <Todolist todos={showSearchResults ? searchResults : todos} setTodos={setTodos} setButtonPopup={setButtonPopup}/>
+      <SearchBar setShowSearchResults={setShowSearchResults} setSearchResults={setSearchResults}/>
       <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
         <h3>nazwa produktu</h3>
         <br></br>
