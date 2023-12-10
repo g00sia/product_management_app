@@ -2,16 +2,16 @@ import React, { useRef } from 'react'
 import "./styles.css"
 
 interface Props {
-  todo: string;
+  product: string;
   description: string;
   imageUrl: string;
-  setTodo: React.Dispatch<React.SetStateAction<string>>;
+  setProduct: React.Dispatch<React.SetStateAction<string>>;
   setDescription: React.Dispatch<React.SetStateAction<string>>;
   setImageUrl: React.Dispatch<React.SetStateAction<string>>;
   handleAdd:(e: React.FormEvent) => void;
 }
 
-const InputField = ({todo, description, imageUrl, setTodo, setDescription, setImageUrl, handleAdd }: Props) => {
+const InputField = ({product: product, description, imageUrl, setProduct: setProduct, setDescription, setImageUrl, handleAdd }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
   return (
     <form className="input" onSubmit={(e)=>{
@@ -20,8 +20,8 @@ const InputField = ({todo, description, imageUrl, setTodo, setDescription, setIm
       <input
         ref = {inputRef}
         type='input'
-        value={todo}
-        onChange={(e) => setTodo(e.target.value)}
+        value={product}
+        onChange={(e) => setProduct(e.target.value)}
         placeholder='enter a task'
         className="input_box"
       />

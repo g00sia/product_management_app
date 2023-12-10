@@ -1,36 +1,36 @@
 import React , {useRef, useState, useEffect} from 'react'
-import { Todo } from '../model';
+import { Product } from '../model';
 import "./styles.css";
-import { deleteTodo, updateTodo} from '../api';
+import { deleteProduct, updateProduct} from '../api';
 
 type Props ={
-    todo:Todo;
-    todos:Todo[];
-    setTodos:React.Dispatch<React.SetStateAction<Todo[]>>;
+    product:Product;
+    products:Product[];
+    setProducts:React.Dispatch<React.SetStateAction<Product[]>>;
     setButtonPopup: React.Dispatch<React.SetStateAction<boolean>>;
 
 };
-const SingleTodo = ({todo, todos, setTodos, setButtonPopup}: Props) => {
+const SingleProduct = ({product: product, products: products, setProducts: setProducts, setButtonPopup}: Props) => {
   const [edit, setEdit] = useState<boolean>(false)
-  const [editTodo, setEditTodo] = useState<string>(todo.todo)
-  const [editDescription, setEditDescription] = useState<string>(todo.description || '');
-  const [editImageUrl, setEditImageUrl] = useState<string>(todo.image_url || '');
+  const [editProduct, setEditProduct] = useState<string>(product.product)
+  const [editDescription, setEditDescription] = useState<string>(product.description || '');
+  const [editImageUrl, setEditImageUrl] = useState<string>(product.image_url || '');
 
   const handleDelete = async () => {
-    const success = await deleteTodo(todo.id);
+    const success = await deleteProduct(product.id);
     if (success) {
-      const updatedTodos = todos.filter((item) => item.id !== todo.id);
-      setTodos(updatedTodos);
+      const updatedTodos = products.filter((item) => item.id !== product.id);
+      setProducts(updatedTodos);
     }
   };
 
 
 const handleEdit = async (e:React.FormEvent, id: number)=>{
    e.preventDefault();
-  const success = await updateTodo(id, editTodo,  editDescription, editImageUrl);
+  const success = await updateProduct(id, editProduct,  editDescription, editImageUrl);
   if (success) {
-    setTodos(
-      todos.map((todo) => (todo.id === id ? { ...todo, todo: editTodo, description: editDescription, image_url: editImageUrl } : todo))
+    setProducts(
+      products.map((product) => (product.id === id ? { ...product, product: editProduct, description: editDescription, image_url: editImageUrl } : product))
     );
     setEdit(false);
   } else {
@@ -51,15 +51,15 @@ useEffect(()=>{
 
 
 return (
-  <form className='todos_single' onSubmit={(e) => handleEdit(e, todo.id)}>
+  <form className='todos_single' onSubmit={(e) => handleEdit(e, product.id)}>
     {edit ? (
       <>
         <input ref={inputRef}
-          value={editTodo} 
-          onChange={(e) => setEditTodo(e.target.value)}
+          value={editProduct} 
+          onChange={(e) => setEditProduct(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
-              handleEdit(e, todo.id);
+              handleEdit(e, product.id);
             }
           }}
           className='todos_single--input' />
@@ -68,7 +68,7 @@ return (
           onChange={(e) => setEditDescription(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
-              handleEdit(e, todo.id);
+              handleEdit(e, product.id);
             }
           }}
           placeholder='Description'
@@ -79,7 +79,7 @@ return (
           onChange={(e) => setEditImageUrl(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
-              handleEdit(e, todo.id);
+              handleEdit(e, product.id);
             }
           }}
           placeholder='Image URL'
@@ -88,13 +88,13 @@ return (
       </>
     ) : (
       <>
-        <span className='todos_single--text'>{todo.todo}</span>
-        <span className='todos_single--text'>{todo.description}</span>
-        <span className='todos_single--text'>{todo.image_url}</span>
+        <span className='todos_single--text'>{product.product}</span>
+        <span className='todos_single--text'>{product.description}</span>
+        <span className='todos_single--text'>{product.image_url}</span>
       </>
     )}
     <div>
-      <span className='icon' onClick={() => { if (!edit) { setEdit(!edit); setEditDescription(todo.description || ''); setEditImageUrl(todo.image_url || ''); } }}>e</span>
+      <span className='icon' onClick={() => { if (!edit) { setEdit(!edit); setEditDescription(product.description || ''); setEditImageUrl(product.image_url || ''); } }}>e</span>
       <span className='icon' onClick={handleDelete}>u</span>
       <span className='icon' onClick={() => setButtonPopup(true)}>c</span>
     </div>
@@ -102,4 +102,4 @@ return (
 );
 }
 
-export default SingleTodo
+export default SingleProduct

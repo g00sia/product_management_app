@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import InputField from './components/InputField';
-import { Todo } from './model';
-import Todolist from './components/Todolist';
-import {addTodo, fetchData, getTotalPages} from './api';
+import { Product } from './model';
+import Productlist from './components/Todolist';
+import {addProduct, fetchData, getTotalPages} from './api';
 import Popup from './components/popup';
 import SearchBar from './components/SearchBar'
 
 
 const App: React.FC = () => {
-  const [todo, setTodo] = useState<string>("");
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [product, setProduct] = useState<string>("");
+  const [products, setProducts] = useState<Product[]>([]);
   const [description, setDescription] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<string>("");
   const [page, setPage] = useState(1);
@@ -18,13 +18,13 @@ const App: React.FC = () => {
   const [buttonPopup, setButtonPopup] = useState(false);
   const [totalPages, setTotalPages] = useState(3);
   const [showSearchResults, setShowSearchResults] = useState(false);
-  const [searchResults, setSearchResults] = useState<Todo[]>([]);
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
 
  
   useEffect(() => {
     const fetchAndSetData = async (page: number, pageSize: number) => {
       const data = await fetchData(page, pageSize); 
-      setTodos(data);
+      setProducts(data);
       const totalPages = await getTotalPages(pageSize);
       setTotalPages(totalPages)
     }; fetchAndSetData(page, pageSize);
@@ -34,11 +34,11 @@ const App: React.FC = () => {
    
  const handleAdd = async (e: React.FormEvent) => {
   e.preventDefault();
-  if (todo) {
-    const newTodo = await addTodo(todo, description, imageUrl);
+  if (product) {
+    const newTodo = await addProduct(product, description, imageUrl);
     if (newTodo) {
-      setTodos((prevTodos) => [...prevTodos, newTodo]);
-      setTodo("");
+      setProducts((prevTodos) => [...prevTodos, newTodo]);
+      setProduct("");
       setDescription("");
       setImageUrl("");
       window.location.reload();
@@ -70,14 +70,14 @@ const renderPaginationButtons = () => {
   return (
     <div className="App">
       <span className="heading">Thingyfy</span>
-      <InputField todo={todo}description={description}
+      <InputField product={product}description={description}
         imageUrl={imageUrl}
-        setTodo={setTodo}
+        setProduct={setProduct}
         setDescription={setDescription}
         setImageUrl={setImageUrl}
         handleAdd={handleAdd} />
       <div className="pagination">{renderPaginationButtons()}</div>
-      <Todolist todos={showSearchResults ? searchResults : todos} setTodos={setTodos} setButtonPopup={setButtonPopup}/>
+      <Productlist products={showSearchResults ? searchResults : products} setProducts={setProducts} setButtonPopup={setButtonPopup}/>
       <SearchBar setShowSearchResults={setShowSearchResults} setSearchResults={setSearchResults}/>
       <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
         <h3>nazwa produktu</h3>

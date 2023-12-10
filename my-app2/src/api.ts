@@ -1,4 +1,4 @@
-import { Todo } from './model';
+import { Product } from './model';
 
 
   const fetchData = async (page: number = 1, pageSize: number = 5) => {
@@ -6,11 +6,11 @@ import { Todo } from './model';
       const response = await fetch(`/getdata?page=${page}&pageSize=${pageSize}`);
       if (response.ok) {
         const data = await response.json();
-        return data.map((item: any) => ({
-          id: item.id,
-          todo: item.content,
-          description: item.description,  
-          image_url: item.image_url 
+        return data.map((product: any) => ({
+          id: product.id,
+          product: product.content,
+          description: product.description,  
+          image_url: product.image_url 
         }));
       } else {
         console.error('Error fetching data:', response.statusText);
@@ -38,14 +38,14 @@ import { Todo } from './model';
     }
   };
 
-  const addTodo = async (todo: string, description: string, imageUrl: string ): Promise<Todo | null> => {
+  const addProduct = async (product: string, description: string, imageUrl: string ): Promise<Product | null> => {
     try {
       const response = await fetch('/getdata', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content: todo, description, image_url: imageUrl })
+        body: JSON.stringify({ content: product, description, image_url: imageUrl })
       });
   
       if (response.ok) {
@@ -61,7 +61,7 @@ import { Todo } from './model';
     }
   };
 
-  const deleteTodo = async (id: number): Promise<boolean> => {
+  const deleteProduct = async (id: number): Promise<boolean> => {
     try {
       const response = await fetch(`/delete/${id}`, {
         method: 'DELETE',
@@ -79,7 +79,7 @@ import { Todo } from './model';
     }
   };
 
-  const updateTodo = async (id: number, updatedTodo: string, updatedDescription: string, updatedImageUrl: string): Promise<boolean> => {
+  const updateProduct = async (id: number, updatedProduct: string, updatedDescription: string, updatedImageUrl: string): Promise<boolean> => {
     console.log("DUPA");
     try {
       const response = await fetch(`/update/${id}`, {
@@ -87,7 +87,7 @@ import { Todo } from './model';
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content: updatedTodo, description: updatedDescription,
+        body: JSON.stringify({ content: updatedProduct, description: updatedDescription,
           image_url: updatedImageUrl}),
       });
   
@@ -104,28 +104,28 @@ import { Todo } from './model';
   };
 
 
-  const searchTodo = async (searchTerm: string, page: number = 1, pageSize: number = 5): Promise<Todo[]> => {
+  const searchProduct = async (searchTerm: string, page: number = 1, pageSize: number = 5): Promise<Product[]> => {
     try {
       const response = await fetch(`/search?q=${searchTerm}&page=${page}&pageSize=${pageSize}`);
       if (response.ok) {
         const data = await response.json();
         return data.results.map((item: any) => ({
           id: item.id,
-          todo: item.content,
+          product: item.content,
           description: item.description,  
           image_url: item.image_url 
         }));
       } else {
-        console.error('Error searching todo:', response.statusText);
+        console.error('Error searching product:', response.statusText);
         return [];
       }
     } catch (error) {
-      console.error('Error searching todo:', error);
+      console.error('Error searching product:', error);
       return [];
     }
   };
   
-  export { addTodo, deleteTodo, updateTodo, fetchData, getTotalPages, searchTodo};
+  export { addProduct , deleteProduct , updateProduct , fetchData, getTotalPages, searchProduct};
 
 
   

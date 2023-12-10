@@ -1,6 +1,6 @@
-export interface Todo{
+export interface Product{
     id:number;
-    todo:string;
+    product:string;
     description:string;
     image_url:string;
 }

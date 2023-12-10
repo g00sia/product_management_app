@@ -1,27 +1,27 @@
 import React from 'react'
 import "./styles.css"
-import { Todo } from '../model';
-import SingleTodo from './SingleTodo';
+import { Product } from '../model';
+import SingleProduct from './SingleTodo';
 
 interface Props{
-    todos:Todo[];
-    setTodos:React.Dispatch<React.SetStateAction<Todo[]>>;
+    products:Product[];
+    setProducts:React.Dispatch<React.SetStateAction<Product[]>>;
     setButtonPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Todolist: React.FC<Props> = ({todos, setTodos,setButtonPopup}: Props) => {
+const Productlist: React.FC<Props> = ({products: products, setProducts: setProducts,setButtonPopup}: Props) => {
   return (
     <div className="todos">
-        {todos.map(todo=>(
-            <SingleTodo
-            todo = {todo} 
-            key={todo.id}
-            todos = {todos}
-            setTodos = {setTodos}
+        {products.map(product=>(
+            <SingleProduct
+            product = {product} 
+            key={product.id}
+            products = {products}
+            setProducts = {setProducts}
             setButtonPopup={setButtonPopup}/>
         ))}
     </div>
   )
 };
 
-export default Todolist
+export default Productlist
