@@ -45,7 +45,7 @@ import { Product } from './model';
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content: product, description, image_url: imageUrl })
+        body: JSON.stringify({ content: product, description, image_url: imageUrl, comments: []})
       });
   
       if (response.ok) {

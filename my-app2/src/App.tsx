@@ -6,7 +6,7 @@ import Productlist from './components/Todolist';
 import {addProduct, fetchData, getTotalPages} from './api';
 import Popup from './components/popup';
 import SearchBar from './components/SearchBar'
-
+import { BsClipboardHeart } from "react-icons/bs";
 
 const App: React.FC = () => {
   const [product, setProduct] = useState<string>("");
@@ -19,6 +19,8 @@ const App: React.FC = () => {
   const [totalPages, setTotalPages] = useState(3);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [newComment, setNewComment] = useState<string>('');
 
  
   useEffect(() => {
@@ -35,9 +37,9 @@ const App: React.FC = () => {
  const handleAdd = async (e: React.FormEvent) => {
   e.preventDefault();
   if (product) {
-    const newTodo = await addProduct(product, description, imageUrl);
-    if (newTodo) {
-      setProducts((prevTodos) => [...prevTodos, newTodo]);
+    const newProduct = await addProduct(product, description, imageUrl);
+    if (newProduct) {
+      setProducts((prevProducts) => [...prevProducts, newProduct]);
       setProduct("");
       setDescription("");
       setImageUrl("");
@@ -67,9 +69,20 @@ const renderPaginationButtons = () => {
   return buttons;
 };
 
+const handleCommentIconClick = (product: Product) => {
+  setSelectedProduct(product);
+  setButtonPopup(true);
+};
+
+const handleAddComment = async () => {
+ 
+  setNewComment('');
+};
+
+
   return (
     <div className="App">
-      <span className="heading">Thingyfy</span>
+      <span className="heading">Thingyfy <BsClipboardHeart /></span>
       <InputField product={product}description={description}
         imageUrl={imageUrl}
         setProduct={setProduct}
@@ -80,10 +93,8 @@ const renderPaginationButtons = () => {
       <Productlist products={showSearchResults ? searchResults : products} setProducts={setProducts} setButtonPopup={setButtonPopup}/>
       <SearchBar setShowSearchResults={setShowSearchResults} setSearchResults={setSearchResults}/>
       <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
-        <h3>nazwa produktu</h3>
-        <br></br>
-        <h3>komenaterze</h3>
-        </Popup>
+      <h3>Komentarze</h3>
+      </Popup>
 
     </div>
   );

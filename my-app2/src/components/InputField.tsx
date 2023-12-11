@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import "./styles.css"
+import { FaThumbsUp } from "react-icons/fa";
 
 interface Props {
   product: string;
@@ -22,7 +23,7 @@ const InputField = ({product: product, description, imageUrl, setProduct: setPro
         type='input'
         value={product}
         onChange={(e) => setProduct(e.target.value)}
-        placeholder='enter a task'
+        placeholder='enter a product'
         className="input_box"
       />
        <input
@@ -39,7 +40,7 @@ const InputField = ({product: product, description, imageUrl, setProduct: setPro
         placeholder='enter an image URL'
         className="input_box"
       />
-      <button className='input_submit' type='submit'>Go</button>
+      <button className='input_submit' type='submit'><FaThumbsUp /></button>
     </form>
   );
 };

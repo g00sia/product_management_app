@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { searchProduct } from '../api';
 import { Product } from '../model';
+import { GiCroissant } from "react-icons/gi";
 
 interface SearchBarProps {
     setShowSearchResults: React.Dispatch<React.SetStateAction<boolean>>;
@@ -11,9 +12,21 @@ const SearchBar: React.FC<SearchBarProps> = ({ setShowSearchResults, setSearchRe
     const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = async () => {
+    if (searchTerm.trim() !== '') {
     const searchResults = await searchProduct(searchTerm);
     setSearchResults(searchResults);
     setShowSearchResults(true);
+  } else{
+    setSearchResults([]);
+    setShowSearchResults(false);
+  }
+  };
+
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   return (
@@ -22,9 +35,10 @@ const SearchBar: React.FC<SearchBarProps> = ({ setShowSearchResults, setSearchRe
         type="text"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        onKeyPress = {handleKeyPress}
         className="searchbar"
       />
-      <button onClick={handleSearch}>Search</button>
+      <button className = "searchbutton" onClick={handleSearch}> search <GiCroissant /></button>
     </div>
   );
 };

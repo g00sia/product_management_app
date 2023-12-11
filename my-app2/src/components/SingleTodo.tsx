@@ -2,6 +2,9 @@ import React , {useRef, useState, useEffect} from 'react'
 import { Product } from '../model';
 import "./styles.css";
 import { deleteProduct, updateProduct} from '../api';
+import { MdEdit } from "react-icons/md";
+import { RiDeleteBin7Fill } from "react-icons/ri";
+import { BsFillChatRightHeartFill } from "react-icons/bs";
 
 type Props ={
     product:Product;
@@ -37,6 +40,11 @@ const handleEdit = async (e:React.FormEvent, id: number)=>{
     // Obsługa błędu, jeśli edycja nie powiedzie się
     console.error('Error updating task.');
   }
+};
+
+const handleComments = async () =>{
+  console.log("dupa")
+
 };
 
 
@@ -94,9 +102,11 @@ return (
       </>
     )}
     <div>
-      <span className='icon' onClick={() => { if (!edit) { setEdit(!edit); setEditDescription(product.description || ''); setEditImageUrl(product.image_url || ''); } }}>e</span>
-      <span className='icon' onClick={handleDelete}>u</span>
-      <span className='icon' onClick={() => setButtonPopup(true)}>c</span>
+      <span className='icon' onClick={() => { if (!edit) { setEdit(!edit); setEditDescription(product.description || ''); setEditImageUrl(product.image_url || ''); } }}><MdEdit /></span>
+      <span className='icon' onClick={handleDelete}><RiDeleteBin7Fill /></span>
+      <span className='icon' onClick={() => { setButtonPopup(true); handleComments(); }}>
+  <BsFillChatRightHeartFill />
+</span>
     </div>
   </form>
 );
