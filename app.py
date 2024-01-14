@@ -47,6 +47,12 @@ class Comment(db.Model):
     def __repr__(self):
         return '<Comment %r>' % self.id
     
+
+    def update_comment(self, content):
+        self.content = content
+        db.session.commit()
+    
+    
 class CommentSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Comment
@@ -182,7 +188,43 @@ def get_comments(product_id):
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
-        
+    
+@app.route('/api/comments/<int:comment_id>', methods=['PUT'])
+def update_comment(comment_id):
+    try:
+        comment = Comment.query.get(comment_id)
+
+        if not comment:
+            return jsonify({'error': 'Comment not found'}), 404
+
+        data = request.get_json()
+        new_content = data.get('content')
+
+        if not new_content:
+            return jsonify({'error': 'Missing comment content'}), 400
+
+        comment.update_comment(new_content)
+
+        return jsonify({'message': 'Comment updated successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+# Endpoint do usuwania komentarza
+@app.route('/api/comments/<int:comment_id>', methods=['DELETE'])
+def delete_comment(comment_id):
+    try:
+        comment = Comment.query.get(comment_id)
+
+        if not comment:
+            return jsonify({'error': 'Comment not found'}), 404
+
+        db.session.delete(comment)
+        db.session.commit()
+
+        return jsonify({'message': 'Comment deleted successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+       
 
 if __name__ == "__main__":
     

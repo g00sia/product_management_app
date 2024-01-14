@@ -44,10 +44,6 @@ const handleEdit = async (e:React.FormEvent, id: number)=>{
   }
 };
 
-const handleComments = async () =>{
-  console.log("dupa")
-};
-
 
 const inputRef = useRef<HTMLInputElement>(null)
 const descriptionRef = useRef<HTMLInputElement>(null)

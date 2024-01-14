@@ -80,7 +80,6 @@ import { Product } from './model';
   };
 
   const updateProduct = async (id: number, updatedProduct: string, updatedDescription: string, updatedImageUrl: string): Promise<boolean> => {
-    console.log("DUPA");
     try {
       const response = await fetch(`/update/${id}`, {
         method: 'POST',
@@ -170,9 +169,49 @@ const getCommentsForProduct = async (productId: number) => {
     return [];
   }
 };
+const updateComment = async (commentId: number, newContent: string): Promise<boolean> => {
+  try {
+    const response = await fetch(`/api/comments/${commentId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        content: newContent,
+      }),
+    });
+
+    if (response.ok) {
+      return true;
+    } else {
+      console.error('Error updating task:', response.statusText);
+      return false;
+    }
+  } catch (error) {
+    console.error('Error updating task:', error);
+    return false;
+  }
+};
+
+
+const deleteComment = async (commentId: number): Promise<void> => {
+  try {
+    const response = await fetch(`/api/comments/${commentId}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete comment');
+    }
+  } catch (error) {
+    console.error('Error deleting comment:', error);
+    throw error;
+  }
+};
+
 
   
-  export { addProduct , deleteProduct , updateProduct , fetchData, getTotalPages, searchProduct, addCommentToProduct, getCommentsForProduct};
+  export { addProduct , deleteProduct , updateProduct , fetchData, getTotalPages, searchProduct, addCommentToProduct, getCommentsForProduct, updateComment, deleteComment};
 
 
   
