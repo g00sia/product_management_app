@@ -175,12 +175,14 @@ def add_comment_to_product(product_id):
 @app.route('/get_comments/<int:product_id>', methods=['GET'])
 def get_comments(product_id):
     try:
-        comments = Comment.query.filter_by(product_id=product_id).order_by(Comment.date_created).all()
+        comments = Comment.query.filter_by(product_id=product_id).order_by(Comment.creationDate).all()
         comments_schema = CommentSchema(many=True)
         comments_json = comments_schema.dump(comments)
         return jsonify({"comments": comments_json})
     except Exception as e:
+        print(e)
         return jsonify({"error": str(e)})
+        
 
 if __name__ == "__main__":
     

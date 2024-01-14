@@ -87,8 +87,7 @@ const handleAddComment = async () => {
           prevProducts.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
         );
 
-        // Zamknij popup po dodaniu komentarza
-        setButtonPopup(false);
+        window.location.reload();
       }
     }
   } catch (error) {

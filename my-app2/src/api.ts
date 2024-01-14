@@ -153,8 +153,26 @@ const addCommentToProduct = async (productId: number, commentContent: string): P
   }
 };
 
+const getCommentsForProduct = async (productId: number) => {
+  try {
+    const response = await fetch(`/get_comments/${productId}`);
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data.comments)
+      return data.comments;
+    } else {
+      console.error('Error fetching comments:', response.statusText);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error in getCommentsForProduct:', error);
+    return [];
+  }
+};
+
   
-  export { addProduct , deleteProduct , updateProduct , fetchData, getTotalPages, searchProduct, addCommentToProduct};
+  export { addProduct , deleteProduct , updateProduct , fetchData, getTotalPages, searchProduct, addCommentToProduct, getCommentsForProduct};
 
 
   

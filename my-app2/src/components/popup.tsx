@@ -1,7 +1,8 @@
 // components/Popup.tsx
 
-import React from 'react';
-import { Product } from '../model';
+import React, { useEffect, useState } from 'react';
+import { Product, Comment } from '../model';
+import { getCommentsForProduct } from '../api';
 
 
 interface PopupProps {
@@ -21,7 +22,25 @@ const Popup: React.FC<PopupProps> = ({
   setNewComment,
   handleAddComment,
 }) => {
+  const [comments, setComments] = useState<Comment[]>([]);
 
+
+  useEffect(() => {
+    // Pobierz komentarze po otwarciu Popup
+    if (selectedProduct) {
+      fetchComments(selectedProduct.id);
+    }
+  }, [selectedProduct]);
+
+  const fetchComments = async (productId: number) => {
+    try {
+      const commentsData = await getCommentsForProduct(productId);
+      setComments(commentsData);
+      
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    }
+  };
 
 
   return trigger ? (
@@ -31,7 +50,12 @@ const Popup: React.FC<PopupProps> = ({
           &times;
         </button>
         <h3>Komentarze</h3>
-        <form>
+       
+        {selectedProduct && (
+          <>
+            <h3>{selectedProduct.product}</h3>
+            <br />
+             <form>
               <input
                 type="text"
                 placeholder="Nowy komentarz"
@@ -42,12 +66,8 @@ const Popup: React.FC<PopupProps> = ({
                 Dodaj komentarz
               </button>
             </form>
-        {selectedProduct && (
-          <>
-            <h3>{selectedProduct.product}</h3>
-            <br />
             <ul>
-              {selectedProduct.comments?.map(comment => (
+               {comments.map((comment) => (
                 <li key={comment.id}>{comment.content}</li>
               ))}
             </ul>
