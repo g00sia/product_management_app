@@ -3,7 +3,7 @@ import './App.css';
 import InputField from './components/InputField';
 import { Product } from './model';
 import Productlist from './components/Todolist';
-import {addProduct, fetchData, getTotalPages} from './api';
+import {addProduct, fetchData, getTotalPages, addCommentToProduct} from './api';
 import Popup from './components/popup';
 import SearchBar from './components/SearchBar'
 import { BsClipboardHeart } from "react-icons/bs";
@@ -21,6 +21,7 @@ const App: React.FC = () => {
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [newComment, setNewComment] = useState<string>('');
+
 
  
   useEffect(() => {
@@ -74,10 +75,27 @@ const handleCommentIconClick = (product: Product) => {
   setButtonPopup(true);
 };
 
+
 const handleAddComment = async () => {
- 
-  setNewComment('');
+  try {
+    if (selectedProduct && newComment) {
+      const updatedProduct = await addCommentToProduct(selectedProduct.id, newComment);
+
+      if (updatedProduct) {
+        // Zaktualizuj stan produktu po dodaniu komentarza
+        setProducts((prevProducts) =>
+          prevProducts.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
+        );
+
+        // Zamknij popup po dodaniu komentarza
+        setButtonPopup(false);
+      }
+    }
+  } catch (error) {
+    console.error('Error adding comment:', error);
+  }
 };
+
 
 
   return (
@@ -90,10 +108,15 @@ const handleAddComment = async () => {
         setImageUrl={setImageUrl}
         handleAdd={handleAdd} />
       <div className="pagination">{renderPaginationButtons()}</div>
-      <Productlist products={showSearchResults ? searchResults : products} setProducts={setProducts} setButtonPopup={setButtonPopup}/>
+      <Productlist products={showSearchResults ? searchResults : products} setProducts={setProducts} setButtonPopup={setButtonPopup} handleCommentIconClick={handleCommentIconClick}/>
       <SearchBar setShowSearchResults={setShowSearchResults} setSearchResults={setSearchResults}/>
-      <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
-      <h3>Komentarze</h3>
+      <Popup trigger={buttonPopup}
+        setTrigger={setButtonPopup}
+        selectedProduct={selectedProduct}
+        newComment={newComment}
+        setNewComment={setNewComment}
+        handleAddComment={handleAddComment}
+      >
       </Popup>
 
     </div>

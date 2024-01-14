@@ -11,13 +11,15 @@ type Props ={
     products:Product[];
     setProducts:React.Dispatch<React.SetStateAction<Product[]>>;
     setButtonPopup: React.Dispatch<React.SetStateAction<boolean>>;
+    handleCommentIconClick: () => void;
 
 };
-const SingleProduct = ({product: product, products: products, setProducts: setProducts, setButtonPopup}: Props) => {
+const SingleProduct = ({product: product, products: products, setProducts: setProducts, setButtonPopup, handleCommentIconClick}: Props) => {
   const [edit, setEdit] = useState<boolean>(false)
   const [editProduct, setEditProduct] = useState<string>(product.product)
   const [editDescription, setEditDescription] = useState<string>(product.description || '');
   const [editImageUrl, setEditImageUrl] = useState<string>(product.image_url || '');
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const handleDelete = async () => {
     const success = await deleteProduct(product.id);
@@ -44,7 +46,6 @@ const handleEdit = async (e:React.FormEvent, id: number)=>{
 
 const handleComments = async () =>{
   console.log("dupa")
-
 };
 
 
@@ -104,7 +105,7 @@ return (
     <div>
       <span className='icon' onClick={() => { if (!edit) { setEdit(!edit); setEditDescription(product.description || ''); setEditImageUrl(product.image_url || ''); } }}><MdEdit /></span>
       <span className='icon' onClick={handleDelete}><RiDeleteBin7Fill /></span>
-      <span className='icon' onClick={() => { setButtonPopup(true); handleComments(); }}>
+      <span className='icon' onClick={() => { setButtonPopup(true); handleCommentIconClick(); }}>
   <BsFillChatRightHeartFill />
 </span>
     </div>

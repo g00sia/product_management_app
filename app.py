@@ -8,13 +8,16 @@ from flask import jsonify
 from flask_cors import CORS
 import json
 from flask_cors import CORS
+from flask_marshmallow import Marshmallow
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+from sqlalchemy.orm import relationship
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+ma = Marshmallow(app)
 CORS(app)
-
 
 class Product(db.Model):
     __tablename__ = 'products'
@@ -30,6 +33,8 @@ class Product(db.Model):
     def __repr__(self):
         return '<Product %r>' % self.id
     
+
+    
 class Comment(db.Model):
     __tablename__ = 'comments'
     
@@ -41,7 +46,14 @@ class Comment(db.Model):
 
     def __repr__(self):
         return '<Comment %r>' % self.id
-
+    
+class CommentSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Comment
+   
+class ProductSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Product
 @app.route('/getdata', methods = ['POST', 'GET'])
 def index():
     if request.method == "POST":
@@ -113,7 +125,6 @@ def delete(id):
 
 @app.route('/update/<int:id>', methods = ['GET', 'POST'])
 def edit(id):
-    print("JESTEM TUTAJ!")
     product = Product.query.get_or_404(id)
 
     if request.method == 'POST':
@@ -132,29 +143,41 @@ def edit(id):
         except Exception as e:
             return jsonify({"error": f"There was an issue updating the task: {str(e)}"})
         
-@app.route('/add_comment/<int:product_id>', methods=['POST'])
-def add_comment(product_id):
-    try:
-        data = request.get_json()
-        content = data.get('content')
 
-        if content:
-            new_comment = Comment(content=content, product_id=product_id)
-            db.session.add(new_comment)
-            db.session.commit()
 
-            return jsonify({"message": "Comment added successfully"})
-        else:
-            return jsonify({"error": "Comment content is required"})
-    except Exception as e:
-        return jsonify({"error": str(e)})
+        
+@app.route('/api/products/<int:product_id>/comments', methods=['POST'])
+def add_comment_to_product(product_id):
+    data = request.get_json()
+
+    if 'content' not in data:
+        return jsonify({'error': 'Missing comment content'}), 400
+
+    product = db.session.get(Product, product_id)
+
+    if not product:
+        return jsonify({'error': 'Product not found'}), 404
+
+    new_comment = Comment(content=data['content'], product=product)
+    db.session.add(new_comment)
+    db.session.commit()
+    product = Product.query.get(product_id)
+    
+
+    # Zwróć zaktualizowany produkt, włączając komentarze
+    updated_product = db.session.get(Product, product_id)
+    product_schema = ProductSchema()
+    result = product_schema.dump(updated_product)
+
+    return jsonify(result), 201
     
     
 @app.route('/get_comments/<int:product_id>', methods=['GET'])
 def get_comments(product_id):
     try:
         comments = Comment.query.filter_by(product_id=product_id).order_by(Comment.date_created).all()
-        comments_json = [{"id": comment.id, "content": comment.content, "date_created": comment.date_created.isoformat()} for comment in comments]
+        comments_schema = CommentSchema(many=True)
+        comments_json = comments_schema.dump(comments)
         return jsonify({"comments": comments_json})
     except Exception as e:
         return jsonify({"error": str(e)})

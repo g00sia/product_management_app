@@ -124,8 +124,37 @@ import { Product } from './model';
       return [];
     }
   };
+
   
-  export { addProduct , deleteProduct , updateProduct , fetchData, getTotalPages, searchProduct};
+const addCommentToProduct = async (productId: number, commentContent: string): Promise<Product | null> => {
+  try {
+    const response = await fetch(`/api/products/${productId}/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        content: commentContent,
+      }),
+    });
+
+    if (response.ok) {
+      const updatedProduct = await response.json();
+      const adaptedProduct = { ...updatedProduct, product: updatedProduct.content };
+      delete adaptedProduct.content;  // Usuń starą nazwę, jeśli to konieczne
+      return adaptedProduct;
+    } else {
+      console.error('Error adding comment:', response.statusText);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    return null;
+  }
+};
+
+  
+  export { addProduct , deleteProduct , updateProduct , fetchData, getTotalPages, searchProduct, addCommentToProduct};
 
 
   

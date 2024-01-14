@@ -7,9 +7,10 @@ interface Props{
     products:Product[];
     setProducts:React.Dispatch<React.SetStateAction<Product[]>>;
     setButtonPopup: React.Dispatch<React.SetStateAction<boolean>>;
+    handleCommentIconClick: (product: Product) => void;
 }
 
-const Productlist: React.FC<Props> = ({products: products, setProducts: setProducts,setButtonPopup}: Props) => {
+const Productlist: React.FC<Props> =  ({ products, setProducts, setButtonPopup, handleCommentIconClick })=> {
   return (
     <div className="todos">
         {products.map(product=>(
@@ -18,7 +19,9 @@ const Productlist: React.FC<Props> = ({products: products, setProducts: setProdu
             key={product.id}
             products = {products}
             setProducts = {setProducts}
-            setButtonPopup={setButtonPopup}/>
+            setButtonPopup={setButtonPopup}
+            handleCommentIconClick={() => handleCommentIconClick(product)}
+            />   
         ))}
     </div>
   )
